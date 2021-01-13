@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body, html {
+	font-family: 'Oxygen', sans-serif;
+	background-color: #001122;
+	color: #fff;
+	padding: 15px 5vw;
+}
+
+a {
+	color: #3ae;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button {
+	background-color: #07335e;
+  border: 2px solid #072453;
+	border-radius: 10px;
+	padding: 10px 15px;
+	color: #aaa;
+	transition: 0.3s linear;
+	font-size: 17px;
+	outline: none;
+}
+
+.replit-auth-button {
+	font-size: 30px;
+	position: fixed;
+	top: calc(50vh - 29px);
+	left: calc(50vw - 130.39px);
+}
+
+button:hover {
+	color: #ccc;
+	transform: scale(1.02);
+	box-shadow: 0px 6px 9px 0px rgba(0, 0, 0, 0.7);
+}
+
+button:focus {	
+	border-color: #176fc3
+}
+
+input, select {
+	font-size: 17px;
+	background-color: #07335e;
+  border: 2px solid #072453;
+	border-radius: 10px;
+	padding: 10px 15px;
+	outline: none;
+	color: #aaa;
+	transition: 0.3s linear;
+}
+
+input:focus, select:focus {
+	color: #ccc;
+	border-color: #176fc3
+}
+
+input:disabled, select:disabled, button:disabled, textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+input:disabled:hover, select:disabled:hover, button:disabled:hover, textarea:disabled:hover {
+  color: #aaa;
+	transform: scale(1);
+	box-shadow: none;
+}
+
+
+h1 {
+	font-size: 60px;
+	text-align: center;
+}
+
+h4 {
+	text-align: center;
+}
+
+
+.drop-wrapper {
+	margin: 20px auto;
+	border: 3px solid #024;
+	border-radius: 10px;
+	padding: 5px 10px;
+	background-color: #032745;
+	overflow: hidden;
+	transition: 0.3s linear;
+}
+
+.drop-title {
+	font-size: 30px;
+	cursor: pointer;
+}
+
+.drop-content {
+	transition: 0.3s linear;
+	opacity: 0;
+	height: fit-content;
+}
+
+.content-wrapper {
+	position: relative;
+}
+
+.loader {
+	margin: 10px auto;
+	display: inherit;
+  border: 10px solid #010822;
+  border-top: 10px solid #04838f;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+	-webkit-animation: spin .8s liner infinite;
+  animation: spin .8s linear infinite;
+	box-shadow: 0px -5px 5px rgba(175, 255, 255, 0.205);
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+
+table {
+	width: 80%;
+	margin: auto;
+}
+
+td, th {
+	text-align: center;
+	min-width: 150px;
+}
+
+#audit-settings-button, #auto-act-form button {
+	display: block;
+	width: 80%;
+	margin: auto;
+	transition: 0.3s linear;
+}
+
+#audit-settings {
+	margin-top: 20px;
+	display: none;
+	opacity: 0;
+	transition: 0.3s linear;
+}
+
+
+#audit-settings input, #audit-settings select, #auto-act-form input, #auto-act-form select {
+	width: calc(80% - 50px);
+	display: inline-block;
+	margin: 2px auto;
+}
+
+#audit-settings select, #auto-act-form select {
+	width: calc(80% - 16.5px);
+}
+
+
+#audit-settings label, #auto-act-form label {
+	width: 75px;
+	display: inline-block;
+	margin-left: calc(10% - 75px);
+	text-align: right;
+}
+
+#audit-settings button, #auto-act-form button {
+	width: 80%;
+	margin: 5px auto;
+	display: block;
+}
+
+.page-button {
+	padding: 2px;
+  font-size: 30px;
+}
+
+.page-button ion-icon {
+	vertical-align: middle;
+	margin-bottom: 2px;
+}
+
+#pages {
+	padding-top: 7px;
+	padding-bottom: 3px;
+	text-align: center;
+	font-size: 30px;
+}
+
+.hidden {
+	display: none;
+}

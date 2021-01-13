@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+
+{% block main %}
+
+<h1>Moderation Tools</h1>
+<h4>Some simple and useful tools to aid you in your protection of the repl talk forum!</h4>
+
+
+<div class="drop-wrapper">
+	<div class="drop-title" id="admin-ban-title">Admin Ban</div>
+	<div class="drop-content">
+		<div class="content-wrapper">
+			<form role="form" method="POST" action='/admin-ban' id="admin-ban-form">
+				<input autocomplete="off" type="text" name="username" placeholder="Enter username" required>
+				<input autocomplete="on" type="text" name="reason" placeholder="Enter reason" required>
+				<button type="submit">ban</button>
+				<div id='adminBanResponse'></div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<div class="drop-wrapper">
+	<div class="drop-title" id="drop-audits">Audit Logs</div>
+	<div class="drop-content">
+		<div class="content-wrapper" id="audits">
+				<p style="text-align: center;">Retrieving audits</p>
+				<div class='loader'></div>
+		</div>
+	</div>
+</div>
+
+<div class="drop-wrapper">
+	<div class="drop-title" id="drop-auto-action">Auto Action</div>
+	<div class="drop-content">
+		<div class="content-wrapper">
+			<form role="form" method="POST" action='/auto-act' id="auto-act-form">
+
+				<div><label for="type-input">Type</label>
+				<select id="type-input" name="type">
+					<option value="empty">-</option>
+					<option value="post">Post</option>
+					<option value="comment">Comment</option>
+					<option value="user">User</option>
+				</select></div>
+
+				<div id="post" style="display: none;"><label for="post-input">ID</label>
+				<input autocomplete="off" type="number" name="post-input" id="post-input" placeholder="Post ID"></div>
+
+				<div id="comment" style="display: none;"><label for="comment-input">ID</label>
+				<input autocomplete="off" type="number" name="comment-input" id="comment-input" placeholder="Comment ID"></div>
+
+				<div id="user" style="display: none;"><label for="user-input">Username</label>
+				<input autocomplete="off" type="text" name="user-input" id="user-input" placeholder="Username"></div>
+
+
+				<div id="post-infraction" style="display: none;"><label for="post-infraction-input">Infraction</label>
+				<select id="post-infraction-input" name="post-infraction-input">
+					<option value="empty">-</option>
+					<option value="effort">Low Effort</option>
+					<option value="language">Non English</option>
+					<option value="description">Bad Description</option>
+					<option value="school">School Work</option>
+					<option value="smash">Keyboard Smash</option>
+					<option value="troll">Troll Post</option>
+					<option value="duplicate">Duplicate Post</option>
+					<option value="multiple">More than Duplicate</option>
+					<option value="offensive">Offensive Laguage</option>
+					<option value="advertising">Advertising</option>
+					<option value="nsfw">NSFW Content</option>
+				</select></div>
+
+				<div id="comment-infraction" style="display: none;"><label for="comment-infraction-input">Infraction</label>
+				<select id="comment-infraction-input" name="comment-infraction-input">
+					<option value="empty">-</option>
+					<option value="language">Non English</option>
+					<option value="smash">Keyboard Smash</option>
+					<option value="offensive">Offensive Laguage</option>
+					<option value="advertising">Advertising</option>
+					<option value="nsfw">NSFW Content</option>
+				</select></div>
+
+				<div id="user-infraction" style="display: none;"><label for="user-infraction-input">Infraction</label>
+				<select id="user-infraction-input" name="user-infraction-input">
+					<option value="empty">-</option>
+					<option value="offensive">Offensive Laguage</option>
+					<option value="advertising">Advertising</option>
+					<option value="nsfw">NSFW Content</option>
+					<option value="age">Under Age</option>
+				</select></div>
+				<button type="submit" id="auto-act-button" disabled>submit</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!--div class="drop-wrapper">
+	<div class="drop-title"></div>
+	<div class="drop-content">
+		<div class="content-wrapper">
+
+		</div>
+	</div>
+</div-->
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+	function admin_ban(event) {
+		if (confirm("This will ban the user and delete all of their posts, are you sure that you wish to do this?")) {
+			let url = "/admin-ban";
+			let request = new XMLHttpRequest();
+			request.open('POST', url, true);
+			request.onload = function() {
+				document.getElementById("adminBanResponse").innerHTML = request.responseText;
+				updateDropdown("admin-ban-title");
+			};
+			request.send(new FormData(event.target));
+		}		
+		event.preventDefault();
+	}
+	document.getElementById("admin-ban-form").addEventListener("submit", admin_ban);
+
+
+	function change_page(forwards) {
+		let next_page
+		if (forwards) {
+			next_page = Number(document.getElementById("page-num").innerHTML) + 1
+		} else {
+			next_page = Number(document.getElementById("page-num").innerHTML) - 1
+		}
+		let url = "/audits";
+		let request = new XMLHttpRequest();
+		request.open('POST', url, true);
+		request.onload = function() {
+			document.getElementById("audits").innerHTML = request.responseText;
+			settings = document.getElementById('settings')
+			if (settings !== null) {
+				document.getElementById("creator-input").value = document.getElementById("creator-setting").innerHTML;
+				document.getElementById("actionType-input").value = document.getElementById("actionType-setting").innerHTML;
+				document.getElementById("model-input").value = document.getElementById("model-setting").innerHTML;
+				document.getElementById("order-input").value = document.getElementById("order-setting").innerHTML;
+				document.getElementById("page-input").value = document.getElementById("page-setting").innerHTML;
+			}
+			updateDropdown("drop-audits");
+			document.getElementById("audit-settings-button").addEventListener('click', () => {
+				a();
+			});
+			document.getElementById("audits-forward").addEventListener('click', () => {change_page(true)});
+			if (next_page > 1) {
+				document.getElementById("audits-backward").addEventListener('click', () => {change_page(false)});
+			}
+		};
+		document.getElementById("page-input").value = next_page;
+		settings = document.getElementById('settings')
+		if (settings !== null) {
+			document.getElementById("creator-input").value = document.getElementById("creator-setting").innerHTML;
+			document.getElementById("actionType-input").value = document.getElementById("actionType-setting").innerHTML;
+			document.getElementById("model-input").value = document.getElementById("model-setting").innerHTML;
+			document.getElementById("order-input").value = document.getElementById("order-setting").innerHTML;
+		}
+		form = document.getElementById("audit-settings-form")
+		request.send(new FormData(form));
+		document.getElementById("audits").innerHTML = "<p style='text-align: center;'>Retrieving audits</p><div class='loader'></div>";
+		updateDropdown("drop-audits");
+	}
+
+	function a() {		
+		document.getElementById("audit-settings-button").style.opacity = "0";
+		document.getElementById("audit-settings").style.opacity = "1";
+		document.getElementById("audit-settings").style.display = 'block';
+		document.getElementById("audit-settings-button").style.display = 'none';
+		updateDropdown("drop-audits");					
+		document.getElementById("audit-settings-form").addEventListener("submit", (event) => {
+			let url = "/audits";
+			let request = new XMLHttpRequest();
+			request.open('POST', url, true);
+			request.onload = function() {
+				document.getElementById("audits").innerHTML = request.responseText;
+				updateDropdown("drop-audits");
+				settings = document.getElementById('settings')
+				if (settings !== null) {
+					document.getElementById("creator-input").value = document.getElementById("creator-setting").innerHTML;
+					document.getElementById("actionType-input").value = document.getElementById("actionType-setting").innerHTML;
+					document.getElementById("model-input").value = document.getElementById("model-setting").innerHTML;
+					document.getElementById("order-input").value = document.getElementById("order-setting").innerHTML;
+					document.getElementById("page-input").value = document.getElementById("page-setting").innerHTML;
+				}
+				document.getElementById("audit-settings-button").addEventListener('click', () => {
+					a();
+				});
+				page = Number(document.getElementById("page-num").innerHTML)
+				document.getElementById("audits-forward").addEventListener('click', () => {change_page(true)});
+				if (page > 1) {
+					document.getElementById("audits-backward").addEventListener('click', () => {change_page(false)});
+				}
+			};
+			request.send(new FormData(event.target));
+			event.preventDefault();
+			document.getElementById("audits").innerHTML = "<p style='text-align: center;'>Retrieving audits</p><div class='loader'></div>";
+			updateDropdown("drop-audits");
+		});
+	}
+	
+
+	function audits() {
+		if (!clicked) {
+			clicked = true;
+			let xhr = new XMLHttpRequest();
+			xhr.open("GET", '/audits', true);
+			xhr.onload = function() {
+				document.getElementById('audits').innerHTML = this.responseText;
+				updateDropdown("drop-audits");
+				document.getElementById("audit-settings-button").addEventListener('click', () => {
+					a();
+				});
+				document.getElementById("audits-forward").addEventListener('click', () => {change_page(true)});
+			}
+			xhr.send();
+		}			
+	}
+	var clicked = false;
+	document.getElementById("drop-audits").addEventListener("click", audits);
+
+
+function resetAll() {
+	document.getElementById("post").style.display = 'none';
+	document.getElementById("comment").style.display = 'none';
+	document.getElementById("user").style.display = 'none'			
+	document.getElementById("post-infraction").style.display = 'none';
+	document.getElementById("comment-infraction").style.display = 'none';
+	document.getElementById("user-infraction").style.display = 'none';
+	document.getElementById("auto-act-button").disabled = true;
+}
+
+function resetInfracts() {
+	document.getElementById("post-infraction").style.display = 'none';
+	document.getElementById("comment-infraction").style.display = 'none';
+	document.getElementById("user-infraction").style.display = 'none';
+	document.getElementById("auto-act-button").disabled = true;
+}
+
+	document.getElementById("type-input").addEventListener("change", () => {
+		resetAll();
+		let type = document.getElementById("type-input").value;
+		if (type !== 'empty') {
+			let new_input1 = document.getElementById(type);
+			new_input1.style.display = 'block';
+			new_input1.style.opacity = '1';
+			updateDropdown("drop-auto-action");
+			new_input1 = document.getElementById(type+"-input")
+			if (new_input1.value !== "") {
+				new_input1.dispatchEvent(new Event('change'));
+			}
+			new_input1.addEventListener("change", () => {
+				resetInfracts();
+				let id = new_input1.value;
+				if (id !== "") {
+					let new_input2 = document.getElementById(type+"-infraction");
+					new_input2.style.display = 'block';
+					new_input2.style.opacity = '1';
+					updateDropdown("drop-auto-action");
+					new_input2 = document.getElementById(type+"-infraction-input")
+					if (new_input2.value !== "empty") {
+						new_input2.dispatchEvent(new Event('change'));
+					}
+					new_input2.addEventListener("change", () => {
+						let infraction = new_input2.value;
+						if (infraction !== "empty") {
+							document.getElementById("auto-act-button").disabled = false;
+						} else {							
+							document.getElementById("auto-act-button").disabled = true;
+						}
+					});
+				}	else {
+					updateDropdown("drop-auto-action");
+				}
+			});
+		} else {
+			updateDropdown("drop-auto-action");
+		}
+	});
+</script>
+
+{% endblock %}

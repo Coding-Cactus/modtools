@@ -1,0 +1,5 @@
+.local/
+__pycache__/
+.env
+Repl_talk_Moderator_Guidelines.md
+schema.txt

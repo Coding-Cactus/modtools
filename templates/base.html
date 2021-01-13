@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="author" content="CodingCactus" >
+
+    <title>Mod Tools{% block title %}{% endblock%}</title>
+
+		<meta name="theme-color" content="#001122">
+
+    <meta property="og:title" content="{% block ogp_title %}Mod Tools{% endblock %}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="A few tools to make moderating repltalk that little bit easier!"/>
+    <meta property="og:image" content="{% block ogp_img %}/favicon.ico{% endblock %}" />
+		    
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+		<script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+
+		{% block head %}{% endblock %}
+  </head>
+  <body>		
+		<main>
+			{% block main %}{% endblock %}
+		</main>
+
+		{% block other %}{% endblock %}
+
+		<script src="/static/drop.js"></script>
+		{% block scripts %}{% endblock %}
+  </body>
+</html>

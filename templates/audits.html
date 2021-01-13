@@ -1,0 +1,72 @@
+<table>	
+	<tr>
+			<th>Moderator</th>
+			<th>Action</th>
+			<th>Model</th>
+			<th>Target</th>
+			<th>Created</th>
+	</tr>
+	{% for audit in audits %}
+			<tr>
+					<td><a href="https://repl.it/@{{audit['creator']}}">{{audit['creator']}}</a></td>
+					<td>{{audit['type']}}</td>
+					<td>{{audit['model']}}</td>
+					{% if audit['model'] in ['Posts', 'Comments'] and 'http' in str(audit['attached']) and audit['type'] != 'DELETED' %}
+							<td><a href="{{audit['attached']}}">{{audit['attached']}}</a></td>
+					{% elif (audit['model'] == 'BannedBoardUsers' or audit['model'] == 'Warning') and not str(audit['attached']).isdigit() %}
+							<td><a href="https://repl.it/@{{audit['attached']}}">{{audit['attached']}}</a>
+					{% else %}
+							<td>{{audit['attached']}}</td>
+					{% endif %}
+					<td>{{audit['created']}}</td>
+			</tr>
+	{% endfor %}
+</table>
+<button id="audit-settings-button">Change Settings</button>
+<div id="audit-settings">
+	<form role="form" method="POST" action='/audits' id="audit-settings-form">
+			<div><label for="creator-input">Model</label>
+			<input autocomplete="on" type="text" name="creator" id='creator-input' placeholder="Moderator"></div>
+			<div><label for="actionType-input">Action</label>
+			<select id="actionType-input" name="actionType">
+					<option value="ALL">ALL</option>
+					<option value="CREATE">CREATE</option>
+					<option value="UPDATE">UPDATE</option>
+					<option value="DELETE">DELETE</option>
+		</select></div>
+			<div><label for="model-input">Model</label>
+			<select id="model-input" name="model">
+					<option value="ALL">ALL</option>
+					<option value="Posts">Posts</option>
+					<option value="Comments">Comments</option>
+					<option value="BoardReports">BoardReports</option>
+					<option value="Warning">Warning</option>
+					<option value="BannedBoardUsers">BannedBoardUsers</option>
+		</select></div>
+			<div><label for="order-input">Order</label>
+			<select id="order-input" name="order">
+					<option value="NEWEST">NEWEST</option>
+					<option value="OLDEST">OLDEST</option>
+		</select></div>
+			<div><label for="page-input">Page</label>
+			<input autocomplete="on" type="number" id="page-input" name="page" placeholder="Page"></div>
+			<button type="submit">submit</button>
+	</form>
+</div>
+
+<div id='pages'>
+    {% if settings['page'] > 1 %}
+        <button class='page-button' id='audits-backward'><ion-icon name="arrow-back-circle-outline"></ion-icon></button>
+    {% endif %}
+    Page: <span id="page-num">{{settings['page']}}</span>
+    {% if 'creator' in settings %}
+        <div class='hidden' id='settings'>
+            <span id="creator-setting">{{settings['creator']}}</span>
+            <span id="actionType-setting">{{settings['actionType']}}</span>
+            <span id="model-setting">{{settings['model']}}</span>
+            <span id="order-setting">{{settings['order']}}</span>
+            <span id="page-setting">{{settings['page']}}</span>
+        </div>
+    {% endif %}
+    <button class='page-button' id='audits-forward'><ion-icon name="arrow-forward-circle-outline"></ion-icon></button>
+</div>
