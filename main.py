@@ -46,15 +46,15 @@ def ban():
         result = asyncio.run(util._ban(username, reason))
 
         if not result:
-            return "User not found"
+            return "User not found.", 404
 
         if not reason:
-            return "Must provide a reason"
+            return "Must provide a valid reason.", 400
 
         if result:
-            return BAN.format(username)
+            return BAN.format(username), 204
     elif flag == False:
-        return DENY
+        return DENY, 403
     else:
         return render_template("index.html")
 
