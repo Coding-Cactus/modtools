@@ -1,7 +1,7 @@
 import util
+import json
 import flask
 import asyncio
-import infractions
 
 from mod_repltalk import client
 from mod_repltalk import repltalk
@@ -16,6 +16,9 @@ DENY = "You are not a ReplTalk moderator! =P"
 BAN = "{name} has now been banned and all posts/comments were deleted."
 LOGIN = "You are not logged with your Replit account!"
 INVALID = "The given {value} is invalid."
+
+with open("infractions.json", "r") as f:
+    infractions = json.load(f)
 
 
 @app.route("/")
