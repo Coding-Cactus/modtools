@@ -1,4 +1,5 @@
-import repltalk, os
+import os
+import repltalk
 
 
 class Post(repltalk.Post):
