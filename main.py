@@ -4,8 +4,7 @@ import asyncio
 import infractions
 
 from mod_repltalk import client
-
-# from mod_repltalk import repltalk
+from mod_repltalk import repltalk
 
 from flask import request
 from flask import render_template
