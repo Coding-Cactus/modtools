@@ -114,7 +114,7 @@ class Client(repltalk.Client):
 		auditList = []
 		for row in range(len(data['moderator']['audit']['viewAudit']['rows'])):
 			if data['moderator']['audit']['viewAudit']['rows'][row] != {} and data['moderator']['audit']['viewAudit']['rows'][row]['id'] != 'Page':
-				creator = await modClient.get_user(data['moderator']['audit']['viewAudit']['rows'][row]['creator'])
+				creator = await client.get_user(data['moderator']['audit']['viewAudit']['rows'][row]['creator'])
 				model = data['moderator']['audit']['viewAudit']['rows'][row]['model']
 				type = data['moderator']['audit']['viewAudit']['rows'][row]['type']
 				created = data['moderator']['audit']['viewAudit']['rows'][row]['created']
@@ -125,25 +125,25 @@ class Client(repltalk.Client):
 				else:
 					if model == 'Posts':
 						try:
-							attached = await modClient.get_post(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+							attached = await client.get_post(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 						except repltalk.PostNotFound:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 					elif model == 'Comments':
 						try:
-							attached = await modClient.get_comment(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+							attached = await client.get_comment(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 						except repltalk.CommentNotFound:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 					elif model == 'BoardReports':
 						attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
-						#attached = await modClient.get_report(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+						#attached = await client.get_report(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 					elif model == 'Warning':
 						try:
-							attached = await modClient.get_user_by_id(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+							attached = await client.get_user_by_id(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 						except:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 					elif model == 'BannedBoardUsers':
 						try:
-							attached = await modClient.get_user_by_id(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+							attached = await client.get_user_by_id(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 						except:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 				auditList.append({
