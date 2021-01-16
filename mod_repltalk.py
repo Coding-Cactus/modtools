@@ -63,6 +63,16 @@ class Comment(repltalk.Comment):
 
 
 class User(repltalk.User):
+	async def warn(self, reason):
+		client = self.client
+		r = await client.perform_graphql(
+			'Mutation',
+			repltalk.Queries.warn_user,
+			user=self.name,
+			reason=reason,
+		)
+		return r
+
 	async def ban(self, reason):
 		client = self.client
 		r = await client.perform_graphql(
@@ -104,7 +114,7 @@ class Client(repltalk.Client):
 		auditList = []
 		for row in range(len(data['moderator']['audit']['viewAudit']['rows'])):
 			if data['moderator']['audit']['viewAudit']['rows'][row] != {} and data['moderator']['audit']['viewAudit']['rows'][row]['id'] != 'Page':
-				creator = await client.get_user(data['moderator']['audit']['viewAudit']['rows'][row]['creator'])
+				creator = await modClient.get_user(data['moderator']['audit']['viewAudit']['rows'][row]['creator'])
 				model = data['moderator']['audit']['viewAudit']['rows'][row]['model']
 				type = data['moderator']['audit']['viewAudit']['rows'][row]['type']
 				created = data['moderator']['audit']['viewAudit']['rows'][row]['created']
@@ -115,25 +125,25 @@ class Client(repltalk.Client):
 				else:
 					if model == 'Posts':
 						try:
-							attached = await client.get_post(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+							attached = await modClient.get_post(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 						except repltalk.PostNotFound:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 					elif model == 'Comments':
 						try:
-							attached = await client.get_comment(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+							attached = await modClient.get_comment(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 						except repltalk.CommentNotFound:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 					elif model == 'BoardReports':
 						attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
-						#attached = await client.get_report(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+						#attached = await modClient.get_report(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 					elif model == 'Warning':
 						try:
-							attached = await client.get_user_by_id(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+							attached = await modClient.get_user_by_id(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 						except:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 					elif model == 'BannedBoardUsers':
 						try:
-							attached = await client.get_user_by_id(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
+							attached = await modClient.get_user_by_id(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
 						except:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 				auditList.append({
@@ -227,6 +237,51 @@ class Queries(repltalk.Queries):
 				id
 				__typename
 			}
+		}
+	'''
+
+	warn_user = '''
+		mutation Mutation($user: String!, $reason: String!) {
+			clui {
+			    moderator {
+				    user {
+						warn(user: $user, reason: $reason) {
+				        	...CluiOutput
+				        	__typename
+				        }
+				        __typename
+			    	}
+			    	__typename
+			    }
+			    __typename
+			}
+		}
+		
+		fragment CluiOutput on CluiOutput {
+			... on CluiSuccessOutput {
+			    message
+			    json
+			    __typename
+			}
+			... on CluiErrorOutput {
+			    error
+			    json
+			    __typename
+			}
+			... on CluiMarkdownOutput {
+			    markdown
+			    __typename
+			}
+			... on CluiTableOutput {
+			    columns {
+			    label
+			    key
+			    __typename
+		    	}
+		    	rows
+		    	__typename
+			}
+			__typename
 		}
 	'''
 
@@ -374,4 +429,4 @@ repltalk.Client = Client
 
 
 client = repltalk.Client()
-client.sid=os.getenv('sid')
+client.sid = os.getenv("modsid")

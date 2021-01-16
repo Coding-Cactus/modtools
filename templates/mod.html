@@ -59,38 +59,39 @@
 				<div id="post-infraction" style="display: none;"><label for="post-infraction-input">Infraction</label>
 				<select id="post-infraction-input" name="post-infraction-input">
 					<option value="empty">-</option>
-					<option value="effort">Low Effort</option>
-					<option value="language">Non English</option>
-					<option value="description">Bad Description</option>
-					<option value="school">School Work</option>
-					<option value="smash">Keyboard Smash</option>
-					<option value="troll">Troll Post</option>
-					<option value="duplicate">Duplicate Post</option>
-					<option value="multiple">More than Duplicate</option>
-					<option value="offensive">Offensive Laguage</option>
+					<option value="low effort">Low Effort</option>
+					<option value="non english">Non English</option>
+					<option value="bad description">Bad Description</option>
+					<option value="school work">School Work</option>
+					<option value="troll post">Troll Post</option>
+					<option value="keyboard smash">Keyboard Smash</option>
+					<option value="duplicate post">Duplicate Post</option>
+					<option value="more than duplicate">More than Duplicate</option>
+					<option value="offensive language">Offensive Language</option>
 					<option value="advertising">Advertising</option>
-					<option value="nsfw">NSFW Content</option>
+					<option value="nsfw content">NSFW Content</option>
 				</select></div>
 
 				<div id="comment-infraction" style="display: none;"><label for="comment-infraction-input">Infraction</label>
 				<select id="comment-infraction-input" name="comment-infraction-input">
 					<option value="empty">-</option>
-					<option value="language">Non English</option>
-					<option value="smash">Keyboard Smash</option>
-					<option value="offensive">Offensive Laguage</option>
+					<option value="non english">Non English</option>
+					<option value="keyboard smash">Keyboard Smash</option>
+					<option value="offensive language">Offensive Language</option>
 					<option value="advertising">Advertising</option>
-					<option value="nsfw">NSFW Content</option>
+					<option value="nsfw content">NSFW Content</option>
 				</select></div>
 
 				<div id="user-infraction" style="display: none;"><label for="user-infraction-input">Infraction</label>
 				<select id="user-infraction-input" name="user-infraction-input">
 					<option value="empty">-</option>
-					<option value="offensive">Offensive Laguage</option>
+					<option value="offensive language">Offensive Language</option>
 					<option value="advertising">Advertising</option>
-					<option value="nsfw">NSFW Content</option>
-					<option value="age">Under Age</option>
+					<option value="nsfw content">NSFW Content</option>
+					<option value="under age">Under Age</option>
 				</select></div>
 				<button type="submit" id="auto-act-button" disabled>submit</button>
+                <div id="autoActResponse"></div>
 			</form>
 		</div>
 	</div>
@@ -116,6 +117,7 @@
 			let request = new XMLHttpRequest();
 			request.open('POST', url, true);
 			request.onload = function() {
+        console.log(request.responseText);
 				document.getElementById("adminBanResponse").innerHTML = request.responseText;
 				updateDropdown("admin-ban-title");
 			};
@@ -227,22 +229,22 @@
 	document.getElementById("drop-audits").addEventListener("click", audits);
 
 
-function resetAll() {
-	document.getElementById("post").style.display = 'none';
-	document.getElementById("comment").style.display = 'none';
-	document.getElementById("user").style.display = 'none'			
-	document.getElementById("post-infraction").style.display = 'none';
-	document.getElementById("comment-infraction").style.display = 'none';
-	document.getElementById("user-infraction").style.display = 'none';
-	document.getElementById("auto-act-button").disabled = true;
-}
+    function resetAll() {
+        document.getElementById("post").style.display = 'none';
+        document.getElementById("comment").style.display = 'none';
+        document.getElementById("user").style.display = 'none'			
+        document.getElementById("post-infraction").style.display = 'none';
+        document.getElementById("comment-infraction").style.display = 'none';
+        document.getElementById("user-infraction").style.display = 'none';
+        document.getElementById("auto-act-button").disabled = true;
+    }
 
-function resetInfracts() {
-	document.getElementById("post-infraction").style.display = 'none';
-	document.getElementById("comment-infraction").style.display = 'none';
-	document.getElementById("user-infraction").style.display = 'none';
-	document.getElementById("auto-act-button").disabled = true;
-}
+    function resetInfracts() {
+        document.getElementById("post-infraction").style.display = 'none';
+        document.getElementById("comment-infraction").style.display = 'none';
+        document.getElementById("user-infraction").style.display = 'none';
+        document.getElementById("auto-act-button").disabled = true;
+    }
 
 	document.getElementById("type-input").addEventListener("change", () => {
 		resetAll();
@@ -284,6 +286,18 @@ function resetInfracts() {
 			updateDropdown("drop-auto-action");
 		}
 	});
+
+    document.getElementById("auto-act-form").addEventListener("submit", (event) => {
+        let url = "/auto-act";
+        let request = new XMLHttpRequest();
+        request.open('POST', url, true);
+        request.onload = function() {
+            document.getElementById("autoActResponse").innerHTML = request.responseText;
+            updateDropdown("drop-auto-action");
+        }
+        request.send(new FormData(event.target));
+		event.preventDefault();
+    });
 </script>
 
 {% endblock %}
