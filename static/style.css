@@ -23,7 +23,7 @@ a:hover {
 
 button {
 	background-color: #07335e;
-  border: 2px solid #072453;
+  	border: 2px solid #072453;
 	border-radius: 10px;
 	padding: 10px 15px;
 	color: #aaa;
@@ -52,7 +52,7 @@ button:focus {
 input, select {
 	font-size: 17px;
 	background-color: #07335e;
-  border: 2px solid #072453;
+ 	border: 2px solid #072453;
 	border-radius: 10px;
 	padding: 10px 15px;
 	outline: none;

@@ -4,7 +4,6 @@ function admin_ban(event) {
         let request = new XMLHttpRequest();
         request.open('POST', url, true);
         request.onload = function() {
-    console.log(request.responseText);
             document.getElementById("adminBanResponse").innerHTML = request.responseText;
             updateDropdown("admin-ban-title");
         };

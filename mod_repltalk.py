@@ -38,7 +38,6 @@ class Post(repltalk.Post):
 				id=self.id,
 			)
 			return r
-	repltalk.Post.delete = delete
 
 
 
@@ -131,7 +130,7 @@ class Client(repltalk.Client):
 					elif model == 'Comments':
 						try:
 							attached = await client.get_comment(data['moderator']['audit']['viewAudit']['rows'][row]['targetId'])
-						except repltalk.CommentNotFound:
+						except:
 							attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
 					elif model == 'BoardReports':
 						attached = data['moderator']['audit']['viewAudit']['rows'][row]['targetId']
